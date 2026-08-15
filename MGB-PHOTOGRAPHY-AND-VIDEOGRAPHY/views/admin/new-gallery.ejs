@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New Gallery · Studio Admin</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">Studio <span>Admin</span></div>
+      <nav><a class="btn btn-outline btn-sm" href="/admin">← Dashboard</a></nav>
+    </div>
+
+    <h1>New Gallery</h1>
+    <p style="margin-top:-8px;">Create a private proofing gallery for a client.</p>
+
+    <% if (error) { %>
+      <div class="error-msg"><%= error %></div>
+    <% } %>
+
+    <div class="panel" style="max-width:560px;">
+      <form method="POST" action="/admin/galleries">
+        <div class="field">
+          <label for="client_id">Client</label>
+          <select id="client_id" name="client_id" required>
+            <option value="">Select a client…</option>
+            <% clients.forEach(c => { %>
+              <option value="<%= c.id %>" <%= preselectClientId === c.id ? 'selected' : '' %>><%= c.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="title">Gallery title</label>
+          <input type="text" id="title" name="title" placeholder="e.g. Smith Wedding — Oct 2026" required />
+        </div>
+
+        <div class="field">
+          <label for="shoot_date">Shoot date</label>
+          <input type="date" id="shoot_date" name="shoot_date" />
+        </div>
+
+        <div class="field">
+          <label for="expiration_date">Expires on (optional)</label>
+          <input type="date" id="expiration_date" name="expiration_date" />
+          <small>Leave blank for no expiration.</small>
+        </div>
+
+        <div class="field">
+          <label for="access_password">Gallery password (optional)</label>
+          <input type="text" id="access_password" name="access_password" placeholder="Leave blank for no password" />
+        </div>
+
+        <div class="field">
+          <label for="max_selections">Selection limit (optional)</label>
+          <input type="number" id="max_selections" name="max_selections" min="1" placeholder="e.g. 20" />
+          <small>Cap how many photos the client can favorite/select. Leave blank for unlimited.</small>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="watermark_enabled" name="watermark_enabled" checked />
+          <label for="watermark_enabled">Watermark preview images</label>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="downloads_enabled" name="downloads_enabled" />
+          <label for="downloads_enabled">Allow full-resolution downloads</label>
+        </div>
+
+        <button class="btn btn-accent btn-block" type="submit">Create Gallery</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

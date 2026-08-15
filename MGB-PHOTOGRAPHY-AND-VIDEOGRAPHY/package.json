@@ -1,0 +1,21 @@
+{
+  "name": "lens-and-light-gallery",
+  "version": "1.0.0",
+  "description": "Client photo gallery web app for a photography business - admin dashboard + client proofing portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "better-sqlite3": "^11.3.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-session": "^2.1.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "multer": "^2.0.1",
+    "nanoid": "^3.3.7",
+    "sharp": "^0.35.3"
+  }
+}
