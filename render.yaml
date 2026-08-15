@@ -1,0 +1,35 @@
+# Render Blueprint — deploys this app as a Node web service with a persistent disk
+# for the SQLite database and uploaded photos.
+#
+# Usage: push this repo to GitHub, then in the Render dashboard choose
+# "New +" -> "Blueprint" and point it at the repo. Render will read this file
+# and provision everything below automatically.
+#
+# Note: persistent disks require a paid instance plan (Starter or higher) —
+# Render's free web service plan does not support attached disks, and without
+# one your uploaded photos and gallery data will be wiped on every deploy or
+# restart.
+
+services:
+  - type: web
+    name: photo-gallery-app
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    disk:
+      name: gallery-storage
+      mountPath: /var/data
+      sizeGB: 5
+    envVars:
+      - key: STORAGE_ROOT
+        value: /var/data
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: NODE_VERSION
+        value: 22
