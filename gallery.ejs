@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= gallery.title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#14140f" />
+  <link rel="icon" href="/icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MGB Galleries" />
+  <script src="/js/pwa.js" defer></script>
+</head>
+<body data-slug="<%= gallery.slug %>" data-max-selections="<%= gallery.max_selections || '' %>" data-downloads="<%= gallery.downloads_enabled ? '1' : '0' %>">
+
+  <div class="client-header">
+    <div class="eyebrow">Private Gallery</div>
+    <h1><%= gallery.title %></h1>
+    <div class="meta">
+      For <%= gallery.client_name %>
+      <% if (gallery.shoot_date) { %> · <%= gallery.shoot_date %><% } %>
+      <% if (gallery.max_selections) { %> · Select up to <%= gallery.max_selections %> favorites<% } %>
+    </div>
+  </div>
+
+  <div class="client-toolbar">
+    <span class="sel-count"><span id="fav-count"><%= favoriteCount %></span> of <%= photos.length %> favorited</span>
+    <% if (gallery.downloads_enabled) { %>
+      <div style="display:flex;gap:8px;">
+        <a class="btn btn-outline btn-sm" href="/gallery/<%= gallery.slug %>/download-all?selected=1">Download Favorites</a>
+        <a class="btn btn-outline btn-sm" href="/gallery/<%= gallery.slug %>/download-all">Download All</a>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="container" style="padding-top:20px;">
+    <% if (photos.length === 0) { %>
+      <div class="empty-state"><p>Photos are still being added to this gallery. Check back soon!</p></div>
+    <% } else { %>
+      <div class="photo-grid" id="photo-grid">
+        <% photos.forEach((p, idx) => { %>
+          <div class="photo-tile" data-photo-id="<%= p.id %>" data-index="<%= idx %>">
+            <img src="/gallery/<%= gallery.slug %>/photos/<%= p.id %>/thumb" loading="lazy" alt="" class="open-lightbox" />
+            <button class="fav-btn <%= p.is_favorited ? 'active' : '' %>" data-photo-id="<%= p.id %>" aria-label="Favorite">♥</button>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="approve-bar">
+    <span style="font-size:13.5px;color:var(--ink-soft);">
+      <% if (gallery.approved) { %>
+        ✓ You approved your final selections<% if (gallery.approved_at) { %> on <%= gallery.approved_at.split(' ')[0] %><% } %>.
+      <% } else { %>
+        Tap hearts to favorite your picks, then approve when you're happy with your selection.
+      <% } %>
+    </span>
+    <% if (!gallery.approved) { %>
+      <button class="btn btn-accent" id="approve-btn">Approve Selections</button>
+    <% } %>
+  </div>
+
+  <div class="footer-note">Powered by your photographer's private gallery portal</div>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">&times;</button>
+    <button class="lightbox-nav prev" id="lightbox-prev">&#8249;</button>
+    <button class="lightbox-nav next" id="lightbox-next">&#8250;</button>
+    <div class="lightbox-img-wrap">
+      <img id="lightbox-img" src="" alt="" />
+    </div>
+    <div class="lightbox-controls">
+      <button class="btn btn-outline btn-sm" id="lightbox-fav">♥ Favorite</button>
+      <% if (gallery.downloads_enabled) { %>
+        <a class="btn btn-outline btn-sm" id="lightbox-download" href="#" download>Download</a>
+      <% } %>
+    </div>
+    <div class="lightbox-comments">
+      <div class="comment-list" id="lightbox-comments"></div>
+      <form id="comment-form">
+        <input type="text" id="comment-input" placeholder="Leave a note about this photo…" maxlength="500" />
+        <button class="btn btn-sm btn-accent" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.GALLERY_PHOTOS = <%- JSON.stringify(photos.map(p => ({ id: p.id, favorited: !!p.is_favorited }))) %>;
+  </script>
+  <script src="/js/client.js"></script>
+</body>
+</html>

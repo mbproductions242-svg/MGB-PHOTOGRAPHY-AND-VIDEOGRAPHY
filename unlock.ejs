@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= gallery.title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#14140f" />
+  <link rel="icon" href="/icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MGB Galleries" />
+  <script src="/js/pwa.js" defer></script>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="eyebrow">Private Gallery</div>
+      <h1><%= gallery.title %></h1>
+      <p class="sub">For <%= gallery.client_name %>. Enter the password your photographer shared with you to view your photos.</p>
+
+      <% if (error) { %>
+        <div class="error-msg"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/gallery/<%= gallery.slug %>/unlock">
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autofocus />
+        </div>
+        <button class="btn btn-accent btn-block" type="submit">View Gallery</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
